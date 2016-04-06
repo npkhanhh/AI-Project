@@ -14,7 +14,7 @@ Neamt 234
 Oradea 380
 Pitesti 100
 Rimnicu-Vilcea 193
-Sibbiu 253
+Sibiu 253
 Timisoara 329
 Urziceni 80
 Vaslui 199

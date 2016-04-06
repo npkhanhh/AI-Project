@@ -1,6 +1,5 @@
 #import networkx as nw
-import heapq
-
+import sys
 class city:
     def __init__(self, name, x=0, y=0):
         self.name = name
@@ -19,6 +18,7 @@ class graph:
         self.h = []
         self.n = 0
         self.m = 0
+        self.trace = []
 
     def load_romania_map(self):
         f = open('romania_map.txt', 'r')
@@ -38,6 +38,7 @@ class graph:
             self.edges.append([idx1, idx2, weight])
         self.h = [0 for i in self.cities]
         f.close()
+        self.heuristic_input()
 
     def heuristic_input(self):
         f = open('heuristic_romania_map.txt', 'r')
@@ -49,12 +50,42 @@ class graph:
             if not s:
                 break
             idx = self.dict[s[0]]
-            self.h[idx] = s[1]
+            self.h[idx] = int(s[1])
         f.close()
 
-    def a_star(self):
-        f = []
-        heap = []
+    def a_star_init(self):
+        self.f = [sys.maxint for i in range(self.n)]
+        self.g = [sys.maxint for i in range(self.n)]
+        self.g[self.idx_start] = 0
+        self.f[self.idx_start] = self.h[self.idx_start]
+        self.closed = [False for i in range(self.n)]
+        self.trace = [0 for i in range(self.n)]
 
-        heapq.heappush(heap, (self.h[self.idx_start], self.idx_start))
+    def a_star_update(self):
+
+        u = -1
+        min = sys.maxint
+        for i in range(self.n):
+            if not self.closed[i] and self.f[i] < min:
+                min = self.f[i]
+                u = i
+        self.closed[u] = True
+        self.cities[u].color = 'red'
+        if u == self.idx_goal or u == -1:
+            return -1
+
+        for i in range(self.n):
+            if self.a[u][i] != 0 and self.g[i] > self.g[u] + self.a[u][i]:
+                self.g[i] = self.g[u] + self.a[u][i]
+                self.f[i] = self.g[i] + self.h[i]
+                self.cities[i].color = 'green'
+                self.trace[i] = u
+        return u
+
+
+    def reset_color(self):
+        for c in self.cities:
+            c.color = 'black'
+
+
 
