@@ -86,6 +86,77 @@ class graph:
     def reset_color(self):
         for c in self.cities:
             c.color = 'black'
+            
+    def ucs_update(self):
+        u = -1
+        min = sys.maxint
+        for i in range(self.n):
+            if not self.closed[i] and self.f[i] < min:
+                min = self.f[i]
+                u = i
+        self.closed[u] = True
+        self.cities[u].color = 'red'
+        if u == self.idx_goal or u == -1:
+            return -1
+
+        for i in range(self.n):
+            if self.a[u][i] != 0 and self.g[i] > self.g[u] + self.a[u][i]:
+                self.g[i] = self.g[u] + self.a[u][i]
+                self.f[i] = self.g[i]
+                self.cities[i].color = 'green'
+                self.trace[i] = u
+        return u        
+       
+    def gbfs_update(self , v):
+        current = v
+        u = -1
+        min = sys.maxint
+        
+        for i in range(self.n):
+            if a[current][i] != 0 and h[i] < min:
+                min = h[i]
+                u = i
+                
+        if u != -1 and f[u] ==0 :
+            g[u] = g[current] + a[current][i]
+            f[u] = f[u] + 1
+            trace[u] = current
+            return u,0
+        
+        elif u != -1 and f[u] !=0 :
+            g[u] = -1
+            return u,1
+        
+        elif u == -1:
+            g[u]=sys.maxint
+            return u,2
+        
+        
+    def test_gbfs(self):
+        self.a_star_init()
+        self.g = [0 for i in range(self.n)]
+        v = self.idx_start
+        while True:
+            end , check = self.gbfs_update(v)
+            v = end
+            if end == self.idx_goal:
+                print self.g[end]
+                break
+            elif check == 1: 
+                print "Infinite loop"
+                break
+            elif check == 2:
+                print "No Path"
+                break
+    
+    def run(self):
+        self.load_romania_map()
+        self.heuristic_input()
+        self.test_gbfs()
+            
+        
+        
+    
 
 
 
