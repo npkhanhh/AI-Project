@@ -113,47 +113,28 @@ class graph:
         min = sys.maxint
         
         for i in range(self.n):
-            if a[current][i] != 0 and h[i] < min:
-                min = h[i]
+            if self.a[current][i] != 0 and self.h[i] < min:
+                min = self.h[i]
                 u = i
-                
-        if u != -1 and f[u] ==0 :
-            g[u] = g[current] + a[current][i]
-            f[u] = f[u] + 1
-            trace[u] = current
+        if u != -1 :
+            self.cities[u].color = 'Red'
+        if u != -1 and self.f[u] == 0:
+            self.g[u] = self.g[current] + self.a[current][u]
+            self.f[u] = self.f[u] + 1
+            self.trace[u] = current
             return u,0
         
-        elif u != -1 and f[u] !=0 :
-            g[u] = -1
+        elif u != -1 and self.f[u] != 0:
+            self.g[u] = -1
             return u,1
         
         elif u == -1:
-            g[u]=sys.maxint
+            self.g[u]=sys.maxint
             return u,2
         
         
-    def test_gbfs(self):
-        self.a_star_init()
-        self.g = [0 for i in range(self.n)]
-        v = self.idx_start
-        while True:
-            end , check = self.gbfs_update(v)
-            v = end
-            if end == self.idx_goal:
-                print self.g[end]
-                break
-            elif check == 1: 
-                print "Infinite loop"
-                break
-            elif check == 2:
-                print "No Path"
-                break
-    
-    def run(self):
-        self.load_romania_map()
-        self.heuristic_input()
-        self.test_gbfs()
-            
+
+
         
         
     
